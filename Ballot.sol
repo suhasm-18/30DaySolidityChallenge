@@ -34,3 +34,23 @@ contract ballot{
         voters[tovoter].voted = false;
         //if(now>(startTime + 10 seconds)) {stage = Stage.Vote; startTime = now;}
     }
+    function vote(uint8 toproposal) public{
+        if(stage != Stage.Vote) return;
+        voter storage sender = voters[msg.sender];
+        if(sender.voted || toproposal >= Proposals.length) return;
+        sender.voted = true;
+        sender.vote = toproposal;
+        Proposals[toproposal].voteCount += sender.weight;
+         //if(now>(startTime + 10 seconds)) {stage = Stage.Vote; startTime = now;}
+    }
+
+    function winningProposal() public pure returns(uint8 _winningProposal){
+        if(stage != Stage.Done) return;
+        uint8 winningVoteCount = 0;
+        for (uint8 prop = 0; prop <Proposals.length; prop++)
+        if(Proposals[prop].voteCount > winningVoteCount){
+            winningVoteCount = Proposals[prop].voteCount;
+            _winningProposal = prop;
+        }
+    }
+}
