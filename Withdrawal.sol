@@ -10,3 +10,10 @@ contract Withdrawal{
         max = msg.value;
         richest.transfer(msg.value);
     }
+ function sendEther() public payable{
+        require(msg.value>max, "You are not the richest");
+        richest=payable(msg.sender);
+        max = msg.value;
+        richest.transfer(msg.value);
+    }
+}
